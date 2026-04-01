@@ -2,7 +2,7 @@
   description = "Home Manager config for M2 MacBook Air";
 
   inputs = {
-    nixpkgs.url = "github:nixpkgs/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     home-manager = {
       url = "github:nix-community/home-manager";
