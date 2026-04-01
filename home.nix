@@ -28,7 +28,7 @@
   programs.git = {
     enable = true;
     userName = "leon";
-    userEmail = "your@email.com";
+    userEmail = "chaewonkong@gmail.com";
   };
 
   programs.zsh = {
