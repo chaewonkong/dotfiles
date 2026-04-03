@@ -7,6 +7,18 @@
 
   programs.home-manager.enable = true;
 
+  home.sessionVariables = {
+    GTK_IM_MODULE = "fcitx";
+    QT_IM_MODULE = "fcitx";
+    XMODIFIERS = "@im=fcitx";
+  };
+
+  systemd.user.sessionVariables = {
+    GTK_IM_MODULE = "fcitx";
+    QT_IM_MODULE = "fcitx";
+    XMODIFIERS = "@im=fcitx";
+  };
+
   home.packages = with pkgs; [
     kitty
     btop
@@ -27,6 +39,7 @@
     tree-sitter
     lazygit
     nerd-fonts.jetbrains-mono
+    noto-fonts-cjk-sans
   ];
 
   programs.git = {
@@ -138,5 +151,6 @@
       exec-once = waybar
       exec-once = dunst
       exec-once = swww-daemon
+      exec-once = fcitx5 -d
     '';
 }
