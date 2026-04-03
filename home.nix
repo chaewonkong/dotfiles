@@ -23,6 +23,9 @@
     wl-clipboard
     brightnessctl
     pamixer
+    neovim
+    tree-sitter
+    lazygit
   ];
 
   programs.git = {
