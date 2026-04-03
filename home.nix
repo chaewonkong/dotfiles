@@ -26,6 +26,7 @@
     neovim
     tree-sitter
     lazygit
+    nerd-fonts.jetbrains-mono
   ];
 
   programs.git = {
@@ -102,6 +103,8 @@
       bind = $mod, V, togglefloating,
       bind = $mod, D, exec, wofi --show drun
       bind = $mod, F, fullscreen, 0
+
+      bind =$mod, B, exec, firefox
 
       bind = $mod, H, movefocus, l
       bind = $mod, L, movefocus, r
