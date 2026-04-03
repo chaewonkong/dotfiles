@@ -41,7 +41,7 @@
   };
 
   xdg.configFile."hypr/hyprland.conf".text = ''
-      monitor=,preferred,auto,1
+      monitor=,preferred,auto,1.2
 
       input {
         kb_layout = us
