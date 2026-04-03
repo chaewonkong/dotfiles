@@ -20,7 +20,6 @@
   };
 
   home.packages = with pkgs; [
-    kitty
     btop
     ripgrep
     fd
@@ -40,6 +39,14 @@
     lazygit
     nerd-fonts.jetbrains-mono
     noto-fonts-cjk-sans
+    noto-fonts
+    qt5.qtwayland
+    qt6.qtwayland
+    xdg-desktop-portal-hyprland
+    xdg-desktop-portal-gtk
+    hyprpolkitagent
+    hypridle
+    hyprlock
     inputs.claude-code.packages.${system}.claude-code
   ];
 
@@ -153,5 +160,7 @@
       exec-once = dunst
       exec-once = swww-daemon
       exec-once = fcitx5 -d
+      exec-once = hyprpolkitagent
+      exec-once = hypridle
     '';
 }
