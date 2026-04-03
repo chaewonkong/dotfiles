@@ -26,7 +26,7 @@
     eza
     bat
     waybar
-    wofi
+    rofi
     dunst
     swww
     grim
@@ -46,8 +46,8 @@
     xdg-desktop-portal-gtk
     hyprpolkitagent
     hypridle
-    hyprlock
     inputs.claude-code.packages.${system}.claude-code
+    wev
   ];
 
   programs.git = {
@@ -71,6 +71,7 @@
 
       input {
         kb_layout = us
+        kb_options = caps:ctrl_modifier # 한글 입력 ctrl+space로 매핑
         follow_mouse = 1
         touchpad {
           natural_scroll = true
@@ -122,10 +123,10 @@
       bind = $mod, Q, killactive,
       bind = $mod, M, exit,
       bind = $mod, V, togglefloating,
-      bind = $mod, D, exec, wofi --show drun
+      bind = $mod, D, exec, rofi -show drun -show-icons
       bind = $mod, F, fullscreen, 0
 
-      bind =$mod, B, exec, firefox
+      bind = $mod, B, exec, firefox
 
       bind = $mod, H, movefocus, l
       bind = $mod, L, movefocus, r
@@ -158,9 +159,31 @@
 
       exec-once = waybar
       exec-once = dunst
-      exec-once = swww-daemon
       exec-once = fcitx5 -d
       exec-once = hyprpolkitagent
       exec-once = hypridle
+
+      # wallpaper
+      exec-once = swww-daemon
+      exec-once = swww img ~/wallpapers/wallhaven-gw5877.png
     '';
+
+xdg.configFile."hypr/hypridle.conf".text=''
+    general {
+      after_sleep_cmd = hyprctl dispatch dpms on
+    }
+
+    listener {
+      timeout = 300 # 5 mins to dark
+      on-timeout = brightnessctl -s set 10%
+      on-resume = brightnessctl -r
+    }
+
+    listener {
+      timeout = 900 # 15 mins to off the screen
+      on-timeout = hyprctl dispatch dpms off
+      on-resume = hyprctl dispatch dpms on
+    }
+'';
 }
+
