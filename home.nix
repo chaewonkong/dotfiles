@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   home.username = "leon";
@@ -40,6 +40,7 @@
     lazygit
     nerd-fonts.jetbrains-mono
     noto-fonts-cjk-sans
+    inputs.claude-code.packages.${system}.claude-code
   ];
 
   programs.git = {
