@@ -30,6 +30,7 @@
     settings = {
       user.name = "chaewonkong";
       user.email = "chaewonkong@gmail.com";
+      credential.helper = "store";
     };
   };
 
@@ -41,7 +42,7 @@
   };
 
   xdg.configFile."hypr/hyprland.conf".text = ''
-      monitor=,preferred,auto,1.2
+      monitor=,preferred,auto,1.25
 
       input {
         kb_layout = us
