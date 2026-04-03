@@ -92,7 +92,7 @@
 
       $mod = SUPER
 
-      bind = $mod, Return, exec, kitty
+      bind = $mod, Return, exec, /usr/bin/kitty
       bind = $mod, Q, killactive,
       bind = $mod, M, exit,
       bind = $mod, V, togglefloating,
