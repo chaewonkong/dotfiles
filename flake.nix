@@ -15,7 +15,13 @@
   outputs = { nixpkgs, home-manager, ... }@inputs:
     let
       system = "aarch64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfreePredicate = pkg:
+          builtins.elem (nixpkgs.lib.getName pkg) [
+            "obsidian"
+          ];
+      };
     in {
       homeConfigurations."leon" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;

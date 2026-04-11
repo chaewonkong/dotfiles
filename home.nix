@@ -13,6 +13,12 @@
     XMODIFIERS = "@im=fcitx";
   };
 
+  programs.zoxide = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
+
   systemd.user.sessionVariables = {
     GTK_IM_MODULE = "fcitx";
     QT_IM_MODULE = "fcitx";
@@ -48,6 +54,7 @@
     hypridle
     inputs.claude-code.packages.${system}.claude-code
     wev
+    obsidian
   ];
 
   programs.git = {
@@ -64,6 +71,12 @@
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
+
+    oh-my-zsh = {
+      enable = true;
+      plugins = ["git"];
+      theme = "af-magic";
+    };
   };
 
   xdg.configFile."hypr/hyprland.conf".text = ''
