@@ -55,6 +55,10 @@
     inputs.claude-code.packages.${system}.claude-code
     wev
     obsidian
+    go_1_26
+    rustup
+    nodejs_24
+    typescript
   ];
 
   programs.git = {
