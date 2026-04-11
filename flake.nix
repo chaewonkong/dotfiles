@@ -10,6 +10,8 @@
     };
 
     claude-code.url = "github:sadjow/claude-code-nix";
+
+    catppuccin.url = "github:catppuccin/nix";
   };
 
   outputs = { nixpkgs, home-manager, ... }@inputs:
