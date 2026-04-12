@@ -372,7 +372,7 @@
 
       # wallpaper
       exec-once = swww-daemon
-      exec-once = swww img ~/wallpapers/wallhaven-gpl8d3.jpg
+      exec-once = swww img ~/wallpapers/wallhaven-391ql6.png
     '';
 
 xdg.configFile."hypr/hypridle.conf".text=''
