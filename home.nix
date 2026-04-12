@@ -1,7 +1,10 @@
-{ config, pkgs, inputs, ... }:
+{  inputs, ... }:
 
 {
-  imports = [ inputs.catppuccin.homeModules.catppuccin ];
+  imports = [ 
+    inputs.catppuccin.homeModules.catppuccin
+    ./modules/packages.nix
+  ];
 
   home.username = "leon";
   home.homeDirectory = "/home/leon";
@@ -32,43 +35,6 @@
     QT_IM_MODULE = "fcitx";
     XMODIFIERS = "@im=fcitx";
   };
-
-  home.packages = with pkgs; [
-    btop
-    ripgrep
-    fd
-    eza
-    bat
-    swww
-    grim
-    slurp
-    wl-clipboard
-    brightnessctl
-    pamixer
-    neovim
-    tree-sitter
-    lazygit
-    nerd-fonts.jetbrains-mono
-    noto-fonts-cjk-sans
-    noto-fonts
-    qt5.qtwayland
-    qt6.qtwayland
-    xdg-desktop-portal-hyprland
-    xdg-desktop-portal-gtk
-    hyprpolkitagent
-    hypridle
-    inputs.claude-code.packages.${system}.claude-code
-    wev
-    obsidian
-    go_1_26
-    rustup
-    nodejs_24
-    typescript
-    ffmpegthumbnailer
-    unar
-    poppler
-    fontpreview
-  ];
 
   programs.yazi = {
     enable = true;
@@ -372,7 +338,7 @@
 
       # wallpaper
       exec-once = swww-daemon
-      exec-once = swww img ~/wallpapers/wallhaven-391ql6.png
+      exec-once = swww img ~/wallpapers/wallhaven-9ozlpk.png
     '';
 
 xdg.configFile."hypr/hypridle.conf".text=''
