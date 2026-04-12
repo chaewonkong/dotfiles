@@ -4,6 +4,7 @@
   imports = [ 
     inputs.catppuccin.homeModules.catppuccin
     ./modules/packages.nix
+    ./modules/shell.nix
   ];
 
   home.username = "leon";
@@ -16,24 +17,6 @@
     enable = true;
     flavor = "mocha";
     accent = "mauve";
-  };
-
-  home.sessionVariables = {
-    GTK_IM_MODULE = "fcitx";
-    QT_IM_MODULE = "fcitx";
-    XMODIFIERS = "@im=fcitx";
-  };
-
-  programs.zoxide = {
-    enable = true;
-    enableZshIntegration = true;
-  };
-
-
-  systemd.user.sessionVariables = {
-    GTK_IM_MODULE = "fcitx";
-    QT_IM_MODULE = "fcitx";
-    XMODIFIERS = "@im=fcitx";
   };
 
   programs.yazi = {
@@ -224,19 +207,6 @@
       user.name = "chaewonkong";
       user.email = "chaewonkong@gmail.com";
       credential.helper = "store";
-    };
-  };
-
-  programs.zsh = {
-    enable = true;
-    enableCompletion = true;
-    autosuggestion.enable = true;
-    syntaxHighlighting.enable = true;
-
-    oh-my-zsh = {
-      enable = true;
-      plugins = ["git"];
-      theme = "af-magic";
     };
   };
 
