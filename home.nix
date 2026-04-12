@@ -5,6 +5,7 @@
     inputs.catppuccin.homeModules.catppuccin
     ./modules/packages.nix
     ./modules/shell.nix
+    ./modules/git.nix
   ];
 
   home.username = "leon";
@@ -199,15 +200,6 @@
         color: @red;
       }
     '';
-  };
-
-  programs.git = {
-    enable = true;
-    settings = {
-      user.name = "chaewonkong";
-      user.email = "chaewonkong@gmail.com";
-      credential.helper = "store";
-    };
   };
 
   xdg.configFile."hypr/hyprland.conf".text = ''
