@@ -9,6 +9,7 @@
     ./modules/hyprland.nix
     ./modules/waybar.nix
     ./modules/dunst.nix
+    ./modules/apps.nix
   ];
 
   home.username = "leon";
@@ -21,18 +22,6 @@
     enable = true;
     flavor = "mocha";
     accent = "mauve";
-  };
-
-  programs.yazi = {
-    enable = true;
-    enableZshIntegration = true;
-    shellWrapperName = "y";
-  };
-
-  programs.rofi = {
-    enable = true;
-    font = "JetBrainsMono Nerd Font 12";
-    # theme은 catppuccin 모듈이 자동 주입 (catppuccin-default + catppuccin-mocha)
   };
 }
 
