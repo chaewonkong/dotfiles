@@ -19,8 +19,7 @@ in {
     lazygit
     nerd-fonts.jetbrains-mono
     noto-fonts-cjk-sans
-    noto-fonts
-    qt5.qtwayland
+    noto-fonts qt5.qtwayland
     qt6.qtwayland
     xdg-desktop-portal-hyprland
     xdg-desktop-portal-gtk
@@ -38,5 +37,7 @@ in {
     poppler
     fontpreview
     mise
+    podman
+    podman-compose
   ];
 }
