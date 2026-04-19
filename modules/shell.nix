@@ -32,5 +32,9 @@
       plugins = ["git"];
       theme = "af-magic";
     };
+
+    initExtra = ''
+      eval "$(mise activate zsh)"
+      '';
   };
 }
