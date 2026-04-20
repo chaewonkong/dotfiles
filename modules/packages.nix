@@ -8,7 +8,7 @@ in {
     fd
     eza
     bat
-    swww
+    awww
     grim
     slurp
     wl-clipboard

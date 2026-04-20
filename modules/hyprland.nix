@@ -97,8 +97,8 @@
       exec-once = hypridle
 
       # wallpaper
-      exec-once = swww-daemon
-      exec-once = swww img ~/wallpapers/wallhaven-9ozlpk.png
+      exec-once = awww-daemon
+      exec-once = sleep 1 && awww img ~/wallpapers/wallhaven-9ozlpk.png
     '';
 
   xdg.configFile."hypr/hypridle.conf".text=''

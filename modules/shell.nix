@@ -36,5 +36,11 @@
     initExtra = ''
       eval "$(mise activate zsh)"
       '';
+
+    profileExtra = ''
+      if [[ -z $DISPLAY && $(tty) == /dev/tty1 ]]; then
+        exec Hyprland
+      fi
+    '';
   };
 }
