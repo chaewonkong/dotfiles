@@ -1,19 +1,7 @@
 {...}:
 {
-  home.sessionVariables = {
-    GTK_IM_MODULE = "fcitx";
-    QT_IM_MODULE = "fcitx";
-    XMODIFIERS = "@im=fcitx";
-  };
-
   home.file.".config/containers/policy.json".text = builtins.toJSON {
     default = [{ type = "insecureAcceptAnything"; }];
-  };
-
-  systemd.user.sessionVariables = {
-    GTK_IM_MODULE = "fcitx";
-    QT_IM_MODULE = "fcitx";
-    XMODIFIERS = "@im=fcitx";
   };
 
   programs.zoxide = {

@@ -1,19 +1,17 @@
-{  inputs, ... }:
+{ inputs, pkgs, ... }:
 
 {
-  imports = [ 
+  imports = [
     inputs.catppuccin.homeModules.catppuccin
     ./modules/packages.nix
     ./modules/shell.nix
     ./modules/git.nix
-    ./modules/hyprland.nix
-    ./modules/waybar.nix
-    ./modules/dunst.nix
     ./modules/apps.nix
+    ./modules/brew.nix
   ];
 
   home.username = "leon";
-  home.homeDirectory = "/home/leon";
+  home.homeDirectory = if pkgs.stdenv.isDarwin then "/Users/leon" else "/home/leon";
   home.stateVersion = "24.11";
 
   programs.home-manager.enable = true;
@@ -24,4 +22,3 @@
     accent = "mauve";
   };
 }
-

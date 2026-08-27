@@ -1,5 +1,5 @@
-{pkgs, inputs, ...}:
-let 
+{pkgs, inputs, lib, ...}:
+let
   system = pkgs.stdenv.hostPlatform.system;
 in {
   home.packages = with pkgs; [
@@ -8,26 +8,13 @@ in {
     fd
     eza
     bat
-    awww
-    grim
-    slurp
-    wl-clipboard
-    brightnessctl
-    pamixer
     neovim
     tree-sitter
     lazygit
     nerd-fonts.jetbrains-mono
     noto-fonts-cjk-sans
-    noto-fonts qt5.qtwayland
-    qt6.qtwayland
-    xdg-desktop-portal-hyprland
-    xdg-desktop-portal-gtk
-    hyprpolkitagent
-    hypridle
+    noto-fonts
     inputs.claude-code.packages.${system}.claude-code
-    wev
-    obsidian
     go_1_26
     rustup
     nodejs_24
@@ -35,9 +22,11 @@ in {
     ffmpegthumbnailer
     unar
     poppler
-    fontpreview
     mise
     podman
     podman-compose
+  ] ++ lib.optionals pkgs.stdenv.isLinux [
+    obsidian
+    fontpreview # xdotool/sxiv 의존성이 darwin 미지원
   ];
 }
