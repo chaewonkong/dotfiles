@@ -21,7 +21,7 @@
       theme = "af-magic";
     };
 
-    initExtra = ''
+    initContent = ''
       eval "$(mise activate zsh)"
       '';
 
