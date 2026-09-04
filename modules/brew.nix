@@ -1,8 +1,29 @@
 { config, lib, pkgs, ... }:
 let
-  formulae = [ ]; # 필요해지면 추가 (예: "wget", "gh")
+  formulae = [ 
+    "wget" 
+    "gh" 
+    "tree" 
+    "hugo"
+    "telnet" 
+    "just" 
+    "helm" 
+    "postgresql@18"
+    "clang-format" 
+    "sops" 
+    "gnupg" 
+    "kustomize" 
+    "age" 
+    "sqlc" 
+  ]; # 필요해지면 추가 (예: "wget", "gh")
   casks = lib.optionals pkgs.stdenv.isDarwin [
     "obsidian"
+    "google-chrome"
+    "visual-studio-code"
+    "ghostty"
+    "slack"
+    "android-studio"
+    "flutter"
   ];
   brewfile = pkgs.writeText "Brewfile" (lib.concatStringsSep "\n" (
     (map (f: ''brew "${f}"'') formulae) ++

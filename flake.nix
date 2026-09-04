@@ -19,10 +19,7 @@
       mkHome = system: home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
           inherit system;
-          config.allowUnfreePredicate = pkg:
-            builtins.elem (nixpkgs.lib.getName pkg) [
-              "obsidian"
-            ];
+          config.allowUnfree = true;
         };
         extraSpecialArgs = { inherit inputs; };
         modules = [ ./home.nix ];

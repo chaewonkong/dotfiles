@@ -8,6 +8,7 @@
     ./modules/git.nix
     ./modules/apps.nix
     ./modules/brew.nix
+    ./modules/containers.nix
   ];
 
   home.username = "leon";
