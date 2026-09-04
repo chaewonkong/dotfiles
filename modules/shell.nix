@@ -24,5 +24,10 @@
     initExtra = ''
       eval "$(mise activate zsh)"
       '';
+
+    shellAliases = {
+      # home-manager switch — 플랫폼 자동 감지 (mac / ubuntu)
+      hms = "home-manager switch --flake ~/.config/home-manager#$([ \"$(uname)\" = Darwin ] && echo mac || echo ubuntu)";
+    };
   };
 }
