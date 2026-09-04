@@ -9,6 +9,7 @@
     ./modules/apps.nix
     ./modules/brew.nix
     ./modules/containers.nix
+    ./modules/nvim.nix
   ];
 
   home.username = "leon";
