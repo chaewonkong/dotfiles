@@ -21,6 +21,8 @@ in {
     unar
     poppler
     mise
+    tmux # 원격 런 보호 — 접속 끊겨도 세션 유지
+    uv # Python 프로젝트/venv 관리 (LLM from scratch — 시스템 CUDA toolkit 없이 torch 설치)
   ] ++ lib.optionals pkgs.stdenv.isLinux [
     gcc # nvim treesitter 파서 컴파일용 (macOS는 Xcode CLT의 clang 사용)
     obsidian

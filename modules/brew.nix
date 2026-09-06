@@ -24,6 +24,7 @@ let
     "slack"
     "android-studio"
     "flutter"
+    "tailscale-app"
   ];
   brewfile = pkgs.writeText "Brewfile" (lib.concatStringsSep "\n" (
     (map (f: ''brew "${f}"'') formulae) ++

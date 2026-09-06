@@ -23,9 +23,23 @@ macOS / Ubuntu Desktop 2개 머신의 dotfiles를 Nix home-manager 하나로 관
 
 ```bash
 # brew 사전 설치 필요: https://brew.sh (macOS/Ubuntu 공통)
+# repo는 양쪽 머신 모두 ~/.config/home-manager 에 clone (nvim 모듈의 out-of-store symlink 경로 전제)
 home-manager switch --flake ~/.config/home-manager#mac     # macOS
 home-manager switch --flake ~/.config/home-manager#ubuntu  # Ubuntu
+# 이후로는 alias `hms` (플랫폼 자동 감지)
 ```
+
+### Ubuntu 초기 세팅 시 수동 작업
+
+home-manager 범위 밖(시스템 레벨)이라 직접 해야 하는 것:
+
+- **로그인 셸 변경** — Ubuntu 기본 셸은 bash. zsh 설정이 bash에 읽히면 `(Ie)__zoxide_hook` 문법 에러가 남
+  ```bash
+  command -v zsh | sudo tee -a /etc/shells
+  chsh -s "$(command -v zsh)"   # 반영은 GNOME 세션 로그아웃/재로그인 후
+  ```
+- **시스템 데몬/드라이버는 apt** — `openssh-server`, NVIDIA 드라이버(`ubuntu-drivers install`) 등. "apt 안 씀" 원칙은 home-manager가 관리하는 유저 도구에 한함
+- **Ghostty terminfo**는 `modules/shell.nix`가 `~/.terminfo`에 자동 배치 (Linux만). 수동으로 `tic` 했었다면 switch 전에 `rm ~/.terminfo/x/xterm-ghostty`
 
 ## 작업 시 주의사항
 
