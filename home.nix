@@ -16,6 +16,8 @@
   home.homeDirectory = if pkgs.stdenv.isDarwin then "/Users/leon" else "/home/leon";
   home.stateVersion = "24.11";
 
+  home.sessionPath = [ "$HOME/.local/bin" ];
+
   programs.home-manager.enable = true;
 
   catppuccin = {
