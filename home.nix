@@ -13,7 +13,7 @@
   ];
 
   home.username = "leon";
-  home.homeDirectory = if pkgs.stdenv.isDarwin then "/Users/leon" else "/home/leon";
+  home.homeDirectory = if pkgs.stdenv.hostPlatform.isDarwin then "/Users/leon" else "/home/leon";
   home.stateVersion = "24.11";
 
   home.sessionPath = [ "$HOME/.local/bin" ];
@@ -22,6 +22,7 @@
 
   catppuccin = {
     enable = true;
+    autoEnable = true;
     flavor = "mocha";
     accent = "mauve";
   };

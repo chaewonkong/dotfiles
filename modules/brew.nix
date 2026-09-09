@@ -16,7 +16,7 @@ let
     "age" 
     "sqlc"
   ]; # 필요해지면 추가 (예: "wget", "gh")
-  casks = lib.optionals pkgs.stdenv.isDarwin [
+  casks = lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
     "obsidian"
     "google-chrome"
     "visual-studio-code"

@@ -12,7 +12,7 @@
         memory = 8;
         disk = 60;
         runtime = "docker";
-    } // lib.optionalAttrs pkgs.stdenv.isDarwin {
+    } // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
         vmType = "vz";
         mountType = "virtiofs";
         rosetta = true; 
