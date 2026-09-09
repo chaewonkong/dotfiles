@@ -14,8 +14,7 @@ let
     "gnupg" 
     "kustomize" 
     "age" 
-    "sqlc" 
-    "gh"
+    "sqlc"
   ]; # 필요해지면 추가 (예: "wget", "gh")
   casks = lib.optionals pkgs.stdenv.isDarwin [
     "obsidian"

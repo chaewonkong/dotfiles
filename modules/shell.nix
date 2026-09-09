@@ -28,6 +28,11 @@
     };
 
     initContent = ''
+      # brew를 PATH 뒤에 붙인다 — shellenv는 앞에 prepend해서 nixpkgs보다 우선하게 되므로 쓰지 않음
+      for brewPrefix in /opt/homebrew /home/linuxbrew/.linuxbrew "$HOME/.linuxbrew"; do
+        [ -x "$brewPrefix/bin/brew" ] && export PATH="$PATH:$brewPrefix/bin:$brewPrefix/sbin"
+      done
+
       eval "$(mise activate zsh)"
       '';
 
