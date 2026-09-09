@@ -15,6 +15,7 @@ let
     "kustomize" 
     "age" 
     "sqlc" 
+    "gh"
   ]; # 필요해지면 추가 (예: "wget", "gh")
   casks = lib.optionals pkgs.stdenv.isDarwin [
     "obsidian"
