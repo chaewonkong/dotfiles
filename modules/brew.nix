@@ -1,22 +1,8 @@
 { config, lib, pkgs, ... }:
 let
-  formulae = [ 
-    "wget" 
-    "gh" 
-    "tree" 
-    "hugo"
-    "telnet" 
-    "just" 
-    "helm" 
-    "postgresql@18"
-    "clang-format" 
-    "sops" 
-    "gnupg" 
-    "kustomize" 
-    "age" 
-    "sqlc"
-    "hf"
-  ]; # 필요해지면 추가 (예: "wget", "gh")
+  # GUI 앱(cask)만 brew로 관리 — CLI 도구는 packages.nix(nixpkgs)로 이관함.
+  # 이유: macOS 앱은 코드사이닝/공증, 자체 업데이터, Launch Services 등록 등
+  # nix store의 불변성과 충돌하는 지점이 많아 OS 네이티브 설치 방식(brew cask)에 위임하는 게 안정적.
   casks = lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
     "obsidian"
     "google-chrome"
@@ -28,8 +14,7 @@ let
     "tailscale-app"
   ];
   brewfile = pkgs.writeText "Brewfile" (lib.concatStringsSep "\n" (
-    (map (f: ''brew "${f}"'') formulae) ++
-    (map (c: ''cask "${c}"'') casks)
+    map (c: ''cask "${c}"'') casks
   ));
 in {
   home.activation.brewBundle = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
