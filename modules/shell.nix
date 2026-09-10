@@ -15,6 +15,18 @@
     enableZshIntegration = true;
   };
 
+  # direnv — .envrc 뿐 아니라 .env 파일도 자동 로드 (load_dotenv).
+  # .env도 처음엔 `direnv allow`로 승인해야 로드됨. nix-direnv는 `use flake` 캐싱용.
+  programs.direnv = {
+    enable = true;
+    enableZshIntegration = true;
+    nix-direnv.enable = true;
+    config.global = {
+      load_dotenv = true;
+      hide_env_diff = true;
+    };
+  };
+
   programs.zsh = {
     enable = true;
     enableCompletion = true;
