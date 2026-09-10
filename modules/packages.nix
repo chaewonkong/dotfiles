@@ -44,5 +44,6 @@ in {
     gcc # nvim treesitter 파서 컴파일용 (macOS는 Xcode CLT의 clang 사용)
     obsidian
     fontpreview # xdotool/sxiv 의존성이 darwin 미지원
+    vscode
   ];
 }
