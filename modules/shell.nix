@@ -39,6 +39,12 @@
     shellAliases = {
       # home-manager switch — 플랫폼 자동 감지 (mac / ubuntu)
       hms = "home-manager switch --flake ~/.config/home-manager#$([ \"$(uname)\" = Darwin ] && echo mac || echo ubuntu)";
+
+      # git
+      st = "git status";
+      pull = "git pull --no-rebase";
+      push = "git push";
+      lgit = "lazygit";
     };
   };
 }
