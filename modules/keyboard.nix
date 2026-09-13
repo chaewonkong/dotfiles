@@ -71,8 +71,22 @@ in
     };
   };
 
-  # Remove Shift+Space from ibus-hangul's switch keys — only CapsLock (→ Hangul key) toggles
   dconf.settings = lib.mkIf isLinux {
+    # Remove Shift+Space from ibus-hangul's switch keys — only CapsLock (→ Hangul key) toggles
     "org/freedesktop/ibus/engine/hangul".switch-keys = "Hangul";
+    # ibus-hangul is the only input source — it has its own Latin mode, and switch-keys only work
+    # while it is the active source (with a separate xkb 'us' source selected, CapsLock does nothing)
+    "org/gnome/desktop/input-sources" = {
+      sources = [ (lib.hm.gvariant.mkTuple [ "ibus" "hangul" ]) ];
+      current = lib.hm.gvariant.mkUint32 0;
+    };
+    # Ubuntu's Tiling Assistant grabs Super+arrows (tile/maximize) — free them for the Cmd+arrow
+    # cursor remaps above. Keypad bindings (Super+KP_*) are kept
+    "org/gnome/shell/extensions/tiling-assistant" = {
+      tile-left-half = [ "<Super>KP_4" ];
+      tile-right-half = [ "<Super>KP_6" ];
+      tile-maximize = [ "<Super>KP_5" ];
+      restore-window = lib.hm.gvariant.mkEmptyArray lib.hm.gvariant.type.string;
+    };
   };
 }

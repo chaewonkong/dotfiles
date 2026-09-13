@@ -16,7 +16,7 @@ Manages dotfiles for two machines (macOS and Ubuntu Desktop) with a single Nix h
   - `nvim.nix` — links `~/.config/nvim` to `~/.config/home-manager/config/nvim` with `mkOutOfStoreSymlink` (not the nix store), so the config stays writable. `lazy-lock.json` changes from `:Lazy update` show up in git — commit them
   - `git.nix` — git user identity and `credential.helper = store` (cross-platform)
   - `apps.nix` — yazi file manager with zsh integration; shell wrapper is `y` (cross-platform)
-  - `keyboard.nix` — Linux-only. Uses xremap (`xremap-flake`, X11 build) to make Ubuntu shortcuts behave like macOS (assumes a Mac-layout keyboard: Cmd = Super). In GUI apps Cmd+key → Ctrl+key; in the terminal (`Gnome-terminal`) Cmd+C/V → Ctrl+Shift+C/V and Shift+Enter → Alt+Enter (Claude Code newline); CapsLock → Hangul key. Also sets ibus-hangul's switch keys to `Hangul` only via dconf
+  - `keyboard.nix` — Linux-only. Uses xremap (`xremap-flake`, X11 build) to make Ubuntu shortcuts behave like macOS (assumes a Mac-layout keyboard: Cmd = Super). In GUI apps Cmd+key → Ctrl+key; in the terminal (`Gnome-terminal`) Cmd+C/V → Ctrl+Shift+C/V and Shift+Enter → Alt+Enter (Claude Code newline); CapsLock → Hangul key. Also sets, via dconf, ibus-hangul's switch keys to `Hangul` only and GNOME's input sources to ibus-hangul alone (its switch keys only work while it's the active source, so a separate xkb `us` source breaks CapsLock toggling), and removes Ubuntu Tiling Assistant's Super+arrow bindings so Cmd+arrow cursor movement isn't grabbed by window tiling
 
 ## Stack
 
@@ -63,5 +63,5 @@ These are system-level, outside home-manager's scope, so they must be done by ha
 - GUI apps go in `casks` in `modules/brew.nix` (macOS). If nixpkgs has a working version for Linux, also add it to `packages.nix` under `lib.optionals pkgs.stdenv.hostPlatform.isLinux [...]`
 - If `brew` isn't installed locally, activation silently skips the cask install (it doesn't fail) — see `modules/brew.nix`
 - New module files must be `git add`ed (at least `git add -N`) before `hms`, since flakes only see tracked files
-- The Korean input method itself is not managed by this repo — Ubuntu uses GNOME's default IBus (`ibus-hangul`), macOS uses the system input method, each configured separately. The exception is Ubuntu's Korean/English toggle keys (CapsLock, ibus-hangul `switch-keys`), which are managed in `modules/keyboard.nix`
+- The Korean input method itself is not managed by this repo — Ubuntu uses GNOME's default IBus (`ibus-hangul`), macOS uses the system input method, each configured separately. The exception is Ubuntu's Korean/English toggling (CapsLock, ibus-hangul `switch-keys`, and the GNOME input source list), which is managed in `modules/keyboard.nix`
 - nixpkgs uses the `unstable` channel
