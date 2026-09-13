@@ -21,29 +21,30 @@ in {
     unar
     poppler
     mise
-    tmux # 원격 런 보호 — 접속 끊겨도 세션 유지
-    uv # Python 프로젝트/venv 관리 (LLM from scratch — 시스템 CUDA toolkit 없이 torch 설치)
+    tmux # protects remote runs — session survives disconnects
+    uv # Python project/venv management (LLM from scratch — installs torch without a system CUDA toolkit)
 
-    # brew.nix에서 이관 — CLI 도구는 nixpkgs로 관리 (brew는 cask 전용, 우분투 linuxbrew 의존성 제거)
+    # Moved from brew.nix — CLI tools are managed via nixpkgs (brew is casks-only; drops the linuxbrew dependency on Ubuntu)
     wget
     gh
     tree
     hugo
-    inetutils # telnet 포함
+    inetutils # includes telnet
     just
     kubernetes-helm
     postgresql_18
-    clang-tools # clang-format 포함
+    clang-tools # includes clang-format
     sops
     gnupg
     kustomize
     age
     sqlc
-    python3Packages.huggingface-hub # hf CLI (구 huggingface-cli)
+    python3Packages.huggingface-hub # hf CLI (formerly huggingface-cli)
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
-    gcc # nvim treesitter 파서 컴파일용 (macOS는 Xcode CLT의 clang 사용)
+    gcc # for compiling nvim treesitter parsers (macOS uses clang from Xcode CLT)
     obsidian
-    fontpreview # xdotool/sxiv 의존성이 darwin 미지원
+    fontpreview # xdotool/sxiv dependencies don't support darwin
     vscode
+    google-chrome # macOS uses brew.nix cask
   ];
 }

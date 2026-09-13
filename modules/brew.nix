@@ -1,8 +1,8 @@
 { config, lib, pkgs, ... }:
 let
-  # GUI 앱(cask)만 brew로 관리 — CLI 도구는 packages.nix(nixpkgs)로 이관함.
-  # 이유: macOS 앱은 코드사이닝/공증, 자체 업데이터, Launch Services 등록 등
-  # nix store의 불변성과 충돌하는 지점이 많아 OS 네이티브 설치 방식(brew cask)에 위임하는 게 안정적.
+  # Only GUI apps (casks) are managed by brew — CLI tools moved to packages.nix (nixpkgs).
+  # Why: macOS apps rely on code signing/notarization, self-updaters, Launch Services registration, etc.,
+  # which clash with the immutable nix store — delegating to the OS-native install path (brew cask) is more reliable.
   casks = lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
     "obsidian"
     "google-chrome"
@@ -18,7 +18,7 @@ let
   ));
 in {
   home.activation.brewBundle = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    # activation 스크립트는 PATH를 nix store 경로로만 덮어써서 brew가 안 잡힌다 — 직접 탐색
+    # The activation script's PATH only contains nix store paths, so brew isn't found — look for it manually
     BREW_BIN=""
     for brewPrefix in /opt/homebrew /home/linuxbrew/.linuxbrew "$HOME/.linuxbrew"; do
       if [ -x "$brewPrefix/bin/brew" ]; then

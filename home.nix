@@ -10,6 +10,7 @@
     ./modules/brew.nix
     ./modules/containers.nix
     ./modules/nvim.nix
+    ./modules/keyboard.nix
   ];
 
   home.username = "leon";

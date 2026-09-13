@@ -12,6 +12,8 @@
     claude-code.url = "github:sadjow/claude-code-nix";
 
     catppuccin.url = "github:catppuccin/nix";
+
+    xremap-flake.url = "github:xremap/nix-flake";
   };
 
   outputs = { nixpkgs, home-manager, ... }@inputs:

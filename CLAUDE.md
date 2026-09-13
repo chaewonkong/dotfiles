@@ -1,51 +1,67 @@
 # Home Manager Configuration
 
-macOS / Ubuntu Desktop 2개 머신의 dotfiles를 Nix home-manager 하나로 관리하는 저장소. 유저는 두 머신 모두 `leon`.
+Manages dotfiles for two machines (macOS and Ubuntu Desktop) with a single Nix home-manager config. The user is `leon` on both machines.
 
-## 구조
+## Structure
 
-- `flake.nix` — Flake 입력(nixpkgs unstable, home-manager, claude-code-nix, catppuccin) 및 `mkHome` 헬퍼로 `homeConfigurations.{mac,ubuntu}` 정의
-- `flake.lock` — 의존성 잠금 파일
-- `home.nix` — 공통 모듈 import. `home.homeDirectory`만 `pkgs.stdenv.hostPlatform.isDarwin` 여부로 분기, 그 외 플랫폼 분기는 `pkgs.stdenv.hostPlatform.isLinux`로 필요한 곳에서만
+- `flake.nix` — Flake inputs (nixpkgs unstable, home-manager, claude-code-nix, catppuccin, xremap-flake) and the `mkHome` helper that defines `homeConfigurations.{mac,ubuntu}` (`aarch64-darwin` / `x86_64-linux`, `allowUnfree = true`)
+- `flake.lock` — dependency lock file
+- `home.nix` — imports all modules and enables catppuccin globally (mocha flavor, mauve accent, `autoEnable`). Only `home.homeDirectory` branches on `pkgs.stdenv.hostPlatform.isDarwin`; any other platform branching uses `pkgs.stdenv.hostPlatform.isLinux`, and only where needed
+- `config/nvim/` — LazyVim-based Neovim config, linked by `modules/nvim.nix`
 - `modules/`
-  - `packages.nix` — 크로스플랫폼 CLI/개발 도구. `obsidian`은 Linux(Ubuntu)에서만 nixpkgs로 설치 (macOS는 `brew.nix`의 cask로 설치)
-  - `shell.nix` — zsh, zoxide, podman policy.json (크로스플랫폼)
-  - `brew.nix` — Homebrew를 Nix로 관리. `formulae`/`casks` 목록으로 Brewfile을 생성해 `home.activation`에서 `brew bundle` 실행. **casks는 macOS 전용**(Homebrew Cask 자체가 Linux를 지원하지 않음), formulae는 두 플랫폼 공통
-  - `git.nix`, `apps.nix` — 크로스플랫폼
+  - `packages.nix` — CLI/dev tools and fonts from nixpkgs (cross-platform), including the CLI tools that used to be Homebrew formulae. Linux-only extras via `lib.optionals isLinux`: `gcc` (treesitter parser builds; macOS uses Xcode CLT clang), `fontpreview` (deps unsupported on darwin), and the GUI apps `obsidian`, `vscode`, `google-chrome` (macOS gets these as casks in `brew.nix`)
+  - `shell.nix` — zsh (oh-my-zsh with `git` plugin, `af-magic` theme), zoxide, direnv (with nix-direnv; `load_dotenv = true` so `.env` files load too, after `direnv allow`), shell aliases (`hms`, git shortcuts), podman `policy.json`. Appends brew to the *end* of `PATH` so nixpkgs binaries win. On Linux, also places the Ghostty terminfo in `~/.terminfo`
+  - `brew.nix` — **casks only, macOS only.** Generates a Brewfile from the `casks` list and runs `brew bundle` in `home.activation`. GUI apps go through brew casks because code signing, self-updaters and Launch Services registration conflict with the immutable nix store. On Linux the cask list is empty
+  - `containers.nix` — colima, docker-client, docker-compose (cross-platform). Links docker-compose as a Docker CLI plugin and writes `~/.colima/default/colima.yaml` (4 CPU, 8 GB RAM, 60 GB disk, docker runtime; on macOS also `vz`, `virtiofs`, Rosetta)
+  - `nvim.nix` — links `~/.config/nvim` to `~/.config/home-manager/config/nvim` with `mkOutOfStoreSymlink` (not the nix store), so the config stays writable. `lazy-lock.json` changes from `:Lazy update` show up in git — commit them
+  - `git.nix` — git user identity and `credential.helper = store` (cross-platform)
+  - `apps.nix` — yazi file manager with zsh integration; shell wrapper is `y` (cross-platform)
+  - `keyboard.nix` — Linux-only. Uses xremap (`xremap-flake`, X11 build) to make Ubuntu shortcuts behave like macOS (assumes a Mac-layout keyboard: Cmd = Super). In GUI apps Cmd+key → Ctrl+key; in the terminal (`Gnome-terminal`) Cmd+C/V → Ctrl+Shift+C/V and Shift+Enter → Alt+Enter (Claude Code newline); CapsLock → Hangul key. Also sets ibus-hangul's switch keys to `Hangul` only via dconf
 
-## 스택
+## Stack
 
-- **Shell**: zsh (completion, autosuggestion, syntax-highlighting 활성화)
+- **Shell**: zsh (completion, autosuggestion, syntax-highlighting enabled) + oh-my-zsh
+- **Editor**: Neovim (LazyVim)
+- **Theme**: catppuccin mocha
 - **Font**: JetBrains Mono Nerd Font, Noto CJK
-- **패키지 관리**: 기본은 nixpkgs, nixpkgs가 잘 안 되는 것(주로 GUI 앱)은 Homebrew — apt/dnf 등 OS 패키지 매니저는 쓰지 않음
+- **Containers**: colima + docker CLI
+- **Package management**: nixpkgs for everything by default. Homebrew is used only on macOS, only for GUI app casks. OS package managers like apt/dnf are not used for user tools
 
-## 적용 방법
+## Applying
 
 ```bash
-# brew 사전 설치 필요: https://brew.sh (macOS/Ubuntu 공통)
-# repo는 양쪽 머신 모두 ~/.config/home-manager 에 clone (nvim 모듈의 out-of-store symlink 경로 전제)
+# macOS only: install brew first — https://brew.sh (Ubuntu doesn't need brew)
+# Clone the repo to ~/.config/home-manager on both machines (nvim.nix's out-of-store symlink path assumes this)
 home-manager switch --flake ~/.config/home-manager#mac     # macOS
 home-manager switch --flake ~/.config/home-manager#ubuntu  # Ubuntu
-# 이후로는 alias `hms` (플랫폼 자동 감지)
+# Afterwards, use the alias `hms` (auto-detects the platform)
 ```
 
-### Ubuntu 초기 세팅 시 수동 작업
+### Manual steps for initial Ubuntu setup
 
-home-manager 범위 밖(시스템 레벨)이라 직접 해야 하는 것:
+These are system-level, outside home-manager's scope, so they must be done by hand:
 
-- **로그인 셸 변경** — Ubuntu 기본 셸은 bash. zsh 설정이 bash에 읽히면 `(Ie)__zoxide_hook` 문법 에러가 남
+- **Change the login shell** — Ubuntu's default shell is bash. If bash reads the zsh config, you get a `(Ie)__zoxide_hook` syntax error
   ```bash
   command -v zsh | sudo tee -a /etc/shells
-  chsh -s "$(command -v zsh)"   # 반영은 GNOME 세션 로그아웃/재로그인 후
+  chsh -s "$(command -v zsh)"   # takes effect after logging out of and back into the GNOME session
   ```
-- **시스템 데몬/드라이버는 apt** — `openssh-server`, NVIDIA 드라이버(`ubuntu-drivers install`) 등. "apt 안 씀" 원칙은 home-manager가 관리하는 유저 도구에 한함
-- **Ghostty terminfo**는 `modules/shell.nix`가 `~/.terminfo`에 자동 배치 (Linux만). 수동으로 `tic` 했었다면 switch 전에 `rm ~/.terminfo/x/xterm-ghostty`
+- **System daemons/drivers use apt** — `openssh-server`, NVIDIA drivers (`ubuntu-drivers install`), etc. The "no apt" rule only applies to user tools managed by home-manager
+- **uinput permissions for xremap** — the xremap service in `modules/keyboard.nix` needs access to `/dev/uinput`. Reboot afterwards (logging out alone may not give the systemd user manager the new group)
+  ```bash
+  sudo usermod -aG input leon
+  echo 'KERNEL=="uinput", GROUP="input", MODE="0660", OPTIONS+="static_node=uinput"' | sudo tee /etc/udev/rules.d/99-uinput.rules
+  echo uinput | sudo tee /etc/modules-load.d/uinput.conf
+  ```
+- **Ghostty terminfo** is placed in `~/.terminfo` automatically by `modules/shell.nix` (Linux only). If you previously ran `tic` manually, `rm ~/.terminfo/x/xterm-ghostty` before switching
 
-## 작업 시 주의사항
+## Notes when making changes
 
-- `home.stateVersion`은 변경하지 말 것 (현재 `"24.11"`)
-- 새 패키지 추가 시 두 시스템(aarch64-darwin, x86_64-linux) 호환성 확인 필요
-- GUI 앱은 원칙적으로 `modules/brew.nix`의 `casks`(macOS)에, Linux에서 nixpkgs로 대체 가능하면 `packages.nix`에 `lib.optionals pkgs.stdenv.hostPlatform.isLinux [...]`로 추가
-- Homebrew formula/cask를 추가해도 `brew`가 로컬에 설치되어 있지 않으면 activation이 조용히 스킵됨 (에러로 막지 않음) — `modules/brew.nix` 참고
-- 한글 입력은 이 저장소가 관리하지 않음 — Ubuntu는 GNOME 기본 IBus(`ibus-hangul` 등)로, macOS는 시스템 입력기로 각자 설정
-- nixpkgs는 `unstable` 채널 사용
+- Do not change `home.stateVersion` (currently `"24.11"`)
+- When adding a package, check compatibility with both systems (aarch64-darwin, x86_64-linux)
+- CLI tools go in `modules/packages.nix` (nixpkgs), not Homebrew
+- GUI apps go in `casks` in `modules/brew.nix` (macOS). If nixpkgs has a working version for Linux, also add it to `packages.nix` under `lib.optionals pkgs.stdenv.hostPlatform.isLinux [...]`
+- If `brew` isn't installed locally, activation silently skips the cask install (it doesn't fail) — see `modules/brew.nix`
+- New module files must be `git add`ed (at least `git add -N`) before `hms`, since flakes only see tracked files
+- The Korean input method itself is not managed by this repo — Ubuntu uses GNOME's default IBus (`ibus-hangul`), macOS uses the system input method, each configured separately. The exception is Ubuntu's Korean/English toggle keys (CapsLock, ibus-hangul `switch-keys`), which are managed in `modules/keyboard.nix`
+- nixpkgs uses the `unstable` channel

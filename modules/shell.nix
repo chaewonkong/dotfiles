@@ -4,8 +4,8 @@
     default = [{ type = "insecureAcceptAnything"; }];
   };
 
-  # 맥 Ghostty에서 SSH 접속 시 TERM=xterm-ghostty. nix zsh(nix ncurses)는 /usr/share/terminfo를
-  # 안 보므로 ~/.terminfo에 둔다 — 시스템/nix ncurses 모두 참조하는 경로. 없으면 ZLE 렌더링이 깨짐.
+  # SSHing in from Ghostty on the Mac sets TERM=xterm-ghostty. nix zsh (nix ncurses) doesn't look in /usr/share/terminfo,
+  # so put it in ~/.terminfo — a path both system and nix ncurses check. Without it, ZLE rendering breaks.
   home.file.".terminfo/x/xterm-ghostty" = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
     source = "${pkgs.ghostty.terminfo}/share/terminfo/x/xterm-ghostty";
   };
@@ -15,8 +15,8 @@
     enableZshIntegration = true;
   };
 
-  # direnv — .envrc 뿐 아니라 .env 파일도 자동 로드 (load_dotenv).
-  # .env도 처음엔 `direnv allow`로 승인해야 로드됨. nix-direnv는 `use flake` 캐싱용.
+  # direnv — auto-loads .env files as well as .envrc (load_dotenv).
+  # .env files also need `direnv allow` the first time. nix-direnv caches `use flake`.
   programs.direnv = {
     enable = true;
     enableZshIntegration = true;
@@ -40,7 +40,7 @@
     };
 
     initContent = ''
-      # brew를 PATH 뒤에 붙인다 — shellenv는 앞에 prepend해서 nixpkgs보다 우선하게 되므로 쓰지 않음
+      # Append brew to the end of PATH — `brew shellenv` prepends, which would shadow nixpkgs, so it's not used
       for brewPrefix in /opt/homebrew /home/linuxbrew/.linuxbrew "$HOME/.linuxbrew"; do
         [ -x "$brewPrefix/bin/brew" ] && export PATH="$PATH:$brewPrefix/bin:$brewPrefix/sbin"
       done
@@ -49,7 +49,7 @@
       '';
 
     shellAliases = {
-      # home-manager switch — 플랫폼 자동 감지 (mac / ubuntu)
+      # home-manager switch — auto-detects the platform (mac / ubuntu)
       hms = "home-manager switch --flake ~/.config/home-manager#$([ \"$(uname)\" = Darwin ] && echo mac || echo ubuntu)";
 
       # git
