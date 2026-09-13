@@ -80,13 +80,9 @@ in
       sources = [ (lib.hm.gvariant.mkTuple [ "ibus" "hangul" ]) ];
       current = lib.hm.gvariant.mkUint32 0;
     };
-    # Ubuntu's Tiling Assistant grabs Super+arrows (tile/maximize) — free them for the Cmd+arrow
-    # cursor remaps above. Keypad bindings (Super+KP_*) are kept
-    "org/gnome/shell/extensions/tiling-assistant" = {
-      tile-left-half = [ "<Super>KP_4" ];
-      tile-right-half = [ "<Super>KP_6" ];
-      tile-maximize = [ "<Super>KP_5" ];
-      restore-window = lib.hm.gvariant.mkEmptyArray lib.hm.gvariant.type.string;
-    };
+    # Don't open the Activities overview on a lone Super tap (like Cmd on macOS). Remaps without a
+    # modifier in the output (Super-Left → Home) make xremap release Super before sending the key,
+    # which GNOME reads as a lone Super tap
+    "org/gnome/mutter".overlay-key = "";
   };
 }
