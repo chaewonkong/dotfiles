@@ -6,7 +6,7 @@ Manages dotfiles for two machines (macOS and Ubuntu Desktop) with a single Nix h
 
 - `flake.nix` — Flake inputs (nixpkgs unstable, home-manager, claude-code-nix, catppuccin, xremap-flake) and the `mkHome` helper that defines `homeConfigurations.{mac,ubuntu}` (`aarch64-darwin` / `x86_64-linux`, `allowUnfree = true`)
 - `flake.lock` — dependency lock file
-- `home.nix` — imports all modules and enables catppuccin globally (mocha flavor, mauve accent, `autoEnable`). Only `home.homeDirectory` branches on `pkgs.stdenv.hostPlatform.isDarwin`; any other platform branching uses `pkgs.stdenv.hostPlatform.isLinux`, and only where needed
+- `home.nix` — imports all modules and enables catppuccin globally (mocha flavor, mauve accent, `autoEnable`). On Linux enables `targets.genericLinux` so nix-installed GUI apps appear in GNOME's app grid / default-app pickers (non-NixOS needs `~/.nix-profile/share` on `XDG_DATA_DIRS`; takes effect after re-login). Only `home.homeDirectory` branches on `pkgs.stdenv.hostPlatform.isDarwin`; any other platform branching uses `pkgs.stdenv.hostPlatform.isLinux`, and only where needed
 - `config/nvim/` — LazyVim-based Neovim config, linked by `modules/nvim.nix`
 - `modules/`
   - `packages.nix` — CLI/dev tools and fonts from nixpkgs (cross-platform), including the CLI tools that used to be Homebrew formulae. Linux-only extras via `lib.optionals isLinux`: `gcc` (treesitter parser builds; macOS uses Xcode CLT clang), `fontpreview` (deps unsupported on darwin), and the GUI apps `obsidian`, `vscode`, `google-chrome` (macOS gets these as casks in `brew.nix`)
@@ -17,6 +17,8 @@ Manages dotfiles for two machines (macOS and Ubuntu Desktop) with a single Nix h
   - `git.nix` — git user identity and `credential.helper = store` (cross-platform)
   - `apps.nix` — yazi file manager with zsh integration; shell wrapper is `y` (cross-platform)
   - `keyboard.nix` — Linux-only. Uses xremap (`xremap-flake`, X11 build) to make Ubuntu shortcuts behave like macOS (assumes a Mac-layout keyboard: Cmd = Super). In GUI apps Cmd+key → Ctrl+key; in the terminal (`Gnome-terminal`) Cmd+C/V → Ctrl+Shift+C/V and Shift+Enter → Alt+Enter (Claude Code newline); CapsLock → Hangul key. Also sets, via dconf, ibus-hangul's switch keys to `Hangul` only and GNOME's input sources to ibus-hangul alone (its switch keys only work while it's the active source, so a separate xkb `us` source breaks CapsLock toggling), and clears mutter's `overlay-key` so a lone Super tap doesn't open the Activities overview (xremap releases Super before emitting modifier-less remaps like Super-Left → Home, which GNOME would otherwise read as a lone tap)
+  - `apps.nix` — yazi file manager with zsh integration; shell wrapper is `y` (cross-platform). On Linux also sets google-chrome as the default browser via `xdg.mimeApps` (so e.g. Claude Desktop login opens in Chrome, not Firefox)
+  - `keyboard.nix` — Linux-only. Uses xremap (`xremap-flake`, X11 build) to make Ubuntu shortcuts behave like macOS (assumes a Mac-layout keyboard: Cmd = Super). In GUI apps Cmd+key → Ctrl+key; in the terminal (`Gnome-terminal`) Cmd+C/V → Ctrl+Shift+C/V and Shift+Enter → Alt+Enter (Claude Code newline); CapsLock → Hangul key. Also sets ibus-hangul's switch keys to `Hangul` only via dconf
 
 ## Stack
 
@@ -54,6 +56,14 @@ These are system-level, outside home-manager's scope, so they must be done by ha
   echo uinput | sudo tee /etc/modules-load.d/uinput.conf
   ```
 - **Ghostty terminfo** is placed in `~/.terminfo` automatically by `modules/shell.nix` (Linux only). If you previously ran `tic` manually, `rm ~/.terminfo/x/xterm-ghostty` before switching
+- **Chrome/Electron sandbox on Ubuntu 24.04+** — AppArmor blocks unprivileged user namespaces for binaries without a profile, so nix-installed `google-chrome`/`vscode`/`obsidian` abort with a "SUID sandbox helper" error. Either relax it system-wide:
+  ```bash
+  echo 'kernel.apparmor_restrict_unprivileged_userns=0' | sudo tee /etc/sysctl.d/60-apparmor-namespace.conf
+  sudo sysctl --system
+  ```
+  or write a per-app AppArmor profile (`flags=(unconfined) { userns, }` on the `/nix/store/*-google-chrome-*/...` path)
+- **Default browser** — `modules/apps.nix` writes `~/.config/mimeapps.list`. If Firefox already created that file, `rm ~/.config/mimeapps.list` before the first `hms`, otherwise home-manager refuses to overwrite it. Verify with `xdg-settings get default-web-browser`
+- **Claude Desktop** — not in nixpkgs; install from Anthropic's official apt repo (same reasoning as macOS casks: self-updater + Electron don't fit the nix store)
 
 ## Notes when making changes
 

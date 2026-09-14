@@ -21,6 +21,10 @@
 
   programs.home-manager.enable = true;
 
+  # Non-NixOS Linux (Ubuntu): put ~/.nix-profile/share on XDG_DATA_DIRS (incl. environment.d for the
+  # GNOME session) so nix-installed GUI apps show up in the app grid and as default-app candidates
+  targets.genericLinux.enable = pkgs.stdenv.hostPlatform.isLinux;
+
   catppuccin = {
     enable = true;
     autoEnable = true;
