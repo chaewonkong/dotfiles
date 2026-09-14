@@ -60,7 +60,7 @@ These are system-level, outside home-manager's scope, so they must be done by ha
   sudo sysctl --system
   ```
   or write a per-app AppArmor profile (`flags=(unconfined) { userns, }` on the `/nix/store/*-google-chrome-*/...` path)
-- **Default browser** — `modules/apps.nix` writes `~/.config/mimeapps.list`. If Firefox already created that file, `rm ~/.config/mimeapps.list` before the first `hms`, otherwise home-manager refuses to overwrite it. Verify with `xdg-settings get default-web-browser`
+- **Default browser** — `modules/apps.nix` writes `mimeapps.list` with `force = true` in both `~/.config/` and `~/.local/share/applications/` (GNOME/Firefox create their own there, which would otherwise make `hms` abort with "would be clobbered"). Verify with `xdg-settings get default-web-browser`
 - **Claude Desktop** — not in nixpkgs; install from Anthropic's official apt repo (same reasoning as macOS casks: self-updater + Electron don't fit the nix store)
 
 ## Notes when making changes
