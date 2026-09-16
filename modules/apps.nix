@@ -17,6 +17,10 @@
       "text/html" = "google-chrome.desktop";
     };
   };
-  xdg.configFile."mimeapps.list".force = lib.mkIf pkgs.stdenv.hostPlatform.isLinux true;
-  xdg.dataFile."applications/mimeapps.list".force = lib.mkIf pkgs.stdenv.hostPlatform.isLinux true;
+  xdg.configFile = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+    "mimeapps.list".force = true;
+  };
+  xdg.dataFile = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+    "applications/mimeapps.list".force = true;
+  };
 }
