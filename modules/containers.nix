@@ -7,7 +7,8 @@
     ];
 
     home.file.".docker/cli-plugins/docker-compose".source ="${pkgs.docker-compose}/bin/docker-compose";
-    home.file.".colima/default/colima.yaml".text = lib.generators.toYAML { } ({
+    # colima rewrites the instance config on every start, so manage the template instead
+    home.file.".colima/_templates/default.yaml".text = lib.generators.toYAML { } ({
         cpu = 4;
         memory = 8;
         disk = 60;
