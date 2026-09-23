@@ -1,6 +1,14 @@
 {pkgs, inputs, lib, ...}:
 let
   system = pkgs.stdenv.hostPlatform.system;
+
+  # Not in nixpkgs; built from the flake input (provides the `portkill` binary)
+  port-killer = pkgs.rustPlatform.buildRustPackage {
+    pname = "port_killer";
+    version = "0.1.0";
+    src = inputs.port-killer;
+    cargoLock.lockFile = "${inputs.port-killer}/Cargo.lock";
+  };
 in {
   home.packages = with pkgs; [
     btop
@@ -40,6 +48,7 @@ in {
     age
     sqlc
     python3Packages.huggingface-hub # hf CLI (formerly huggingface-cli)
+    port-killer # `portkill` — interactive port/process killer
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
     gcc # for compiling nvim treesitter parsers (macOS uses clang from Xcode CLT)
     obsidian

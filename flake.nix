@@ -14,6 +14,12 @@
     catppuccin.url = "github:catppuccin/nix";
 
     xremap-flake.url = "github:xremap/nix-flake";
+
+    # Not a flake — built from source in modules/packages.nix
+    port-killer = {
+      url = "github:chaewonkong/port_killer";
+      flake = false;
+    };
   };
 
   outputs = { nixpkgs, home-manager, ... }@inputs:

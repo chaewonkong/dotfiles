@@ -166,12 +166,29 @@
         "type": "github"
       }
     },
+    "port-killer": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1786338277,
+        "narHash": "sha256-5w1g+hrOD9SneIBlbueqWv5cXyutpf8ur+WE2JkGWIA=",
+        "owner": "chaewonkong",
+        "repo": "port_killer",
+        "rev": "d326eebf36a5b9c4df962ec5ba3f5419347cbe72",
+        "type": "github"
+      },
+      "original": {
+        "owner": "chaewonkong",
+        "repo": "port_killer",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "catppuccin": "catppuccin",
         "claude-code": "claude-code",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs_3",
+        "port-killer": "port-killer",
         "xremap-flake": "xremap-flake"
       }
     },
