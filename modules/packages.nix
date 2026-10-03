@@ -9,6 +9,36 @@ let
     src = inputs.port-killer;
     cargoLock.lockFile = "${inputs.port-killer}/Cargo.lock";
   };
+
+  # nix GTK3 doesn't look in /usr/lib for IM modules, so nix-installed GUI apps fall back to the
+  # built-in simple IM and never talk to Ubuntu's IBus daemon (no Korean input at all). Give them
+  # a cache listing only nixpkgs' im-ibus.so, built against the same gtk3 they use
+  gtk3IbusCache = pkgs.runCommand "gtk3-ibus-immodules" { } ''
+    mkdir -p $out
+    ${pkgs.gtk3.dev}/bin/gtk-query-immodules-3.0 \
+      ${pkgs.ibus}/lib/gtk-3.0/3.0.0/immodules/im-ibus.so > $out/immodules.cache
+  '';
+
+  # Wraps every binary to use that cache; .desktop files with absolute store paths
+  # (e.g. google-chrome) are rewritten to point at the wrappers
+  withIbus = pkg: pkgs.symlinkJoin {
+    name = "${pkg.pname or pkg.name}-ibus";
+    paths = [ pkg ];
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    postBuild = ''
+      for b in $out/bin/*; do
+        wrapProgram "$b" \
+          --set GTK_IM_MODULE_FILE ${gtk3IbusCache}/immodules.cache \
+          --set-default GTK_IM_MODULE ibus
+      done
+      for d in $out/share/applications/*.desktop; do
+        if grep -q ${pkg} "$d"; then
+          sed "s|${pkg}|$out|g" "$(readlink -f "$d")" > "$d.tmp"
+          rm "$d" && mv "$d.tmp" "$d"
+        fi
+      done
+    '';
+  };
 in {
   home.packages = with pkgs; [
     btop
@@ -51,9 +81,10 @@ in {
     port-killer # `portkill` — interactive port/process killer
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
     gcc # for compiling nvim treesitter parsers (macOS uses clang from Xcode CLT)
-    obsidian
     fontpreview # xdotool/sxiv dependencies don't support darwin
+  ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux (map withIbus [
+    obsidian
     vscode
     google-chrome # macOS uses brew.nix cask
-  ];
+  ]);
 }
