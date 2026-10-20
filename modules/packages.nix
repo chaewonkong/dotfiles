@@ -80,7 +80,6 @@ in {
     python3Packages.huggingface-hub # hf CLI (formerly huggingface-cli)
     port-killer # `portkill` — interactive port/process killer
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
-    gcc # for compiling nvim treesitter parsers (macOS uses clang from Xcode CLT)
     fontpreview # xdotool/sxiv dependencies don't support darwin
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux (map withIbus [
     obsidian
