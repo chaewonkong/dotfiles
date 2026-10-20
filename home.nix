@@ -11,6 +11,7 @@
     ./modules/containers.nix
     ./modules/nvim.nix
     ./modules/keyboard.nix
+    ./modules/openlogi.nix
   ];
 
   home.username = "leon";
