@@ -20,7 +20,7 @@ in
     enable = isLinux;
     withX11 = true;
     # The MX Master 3 emits key events, so xremap auto-selects it as a keyboard and grabs its evdev node
-    # exclusively — which blocks OpenLogi's input hook (modules/openlogi.nix). extraArgs is joined
+    # exclusively — which blocks other tools reading the mouse (e.g. OpenLogi). extraArgs is joined
     # unescaped into ExecStart, hence the inner quotes
     extraArgs = lib.optionals isLinux [ "--ignore 'Logitech MX Master 3'" ];
     config = lib.mkIf isLinux {

@@ -11,7 +11,6 @@
     ./modules/containers.nix
     ./modules/nvim.nix
     ./modules/keyboard.nix
-    ./modules/openlogi.nix
   ];
 
   home.username = "leon";
@@ -26,7 +25,7 @@
   # GNOME session) so nix-installed GUI apps show up in the app grid and as default-app candidates
   targets.genericLinux.enable = pkgs.stdenv.hostPlatform.isLinux;
 
-  # Give nix GPU apps (e.g. openlogi-gui) the host's NVIDIA userspace via /run/opengl-driver; without it
+  # Give nix GPU apps (e.g. GPUI/Vulkan apps) the host's NVIDIA userspace via /run/opengl-driver; without it
   # they fall back to llvmpipe, which renders GPUI windows as an empty transparent frame on X11.
   # version must match the host driver exactly (`nvidia-smi`) — update both after an apt driver upgrade,
   # then re-run `sudo ~/.nix-profile/bin/non-nixos-gpu-setup` (see CLAUDE.md)
