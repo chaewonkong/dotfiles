@@ -12,6 +12,7 @@ let
     "android-studio"
     "flutter"
     "tailscale-app"
+    "freelens"
   ];
   brewfile = pkgs.writeText "Brewfile" (lib.concatStringsSep "\n" (
     map (c: ''cask "${c}"'') casks

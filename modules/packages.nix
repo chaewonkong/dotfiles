@@ -45,6 +45,7 @@ in {
     ripgrep
     fd
     eza
+    procs
     bat
     neovim
     tree-sitter

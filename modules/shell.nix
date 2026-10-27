@@ -46,11 +46,20 @@
       done
 
       eval "$(mise activate zsh)"
+
+      export ANDROID_HOME="$HOME/Library/Android/sdk"
+      export PATH="$HOME/go/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
       '';
 
     shellAliases = {
       # home-manager switch — auto-detects the platform (mac / ubuntu)
       hms = "home-manager switch --flake ~/.config/home-manager#$([ \"$(uname)\" = Darwin ] && echo mac || echo ubuntu)";
+
+      ls = "eza -g --time-style=long-iso";
+      cat = "bat";
+      grep = "rg";
+      ps = "procs";
+      ktl = "kubectl";
 
       # git
       st = "git status";
