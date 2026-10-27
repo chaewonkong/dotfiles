@@ -28,6 +28,8 @@
         pkgs = import nixpkgs {
           inherit system;
           config.allowUnfree = true;
+          # Host NVIDIA userspace for nix GPU apps (targets.genericLinux.gpu.nvidia in home.nix)
+          config.nvidia.acceptLicense = true;
         };
         extraSpecialArgs = { inherit inputs; };
         modules = [ ./home.nix ];

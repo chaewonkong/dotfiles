@@ -25,6 +25,16 @@
   # GNOME session) so nix-installed GUI apps show up in the app grid and as default-app candidates
   targets.genericLinux.enable = pkgs.stdenv.hostPlatform.isLinux;
 
+  # Give nix GPU apps (e.g. GPUI/Vulkan apps) the host's NVIDIA userspace via /run/opengl-driver; without it
+  # they fall back to llvmpipe, which renders GPUI windows as an empty transparent frame on X11.
+  # version must match the host driver exactly (`nvidia-smi`) — update both after an apt driver upgrade,
+  # then re-run `sudo ~/.nix-profile/bin/non-nixos-gpu-setup` (see CLAUDE.md)
+  targets.genericLinux.gpu.nvidia = {
+    enable = pkgs.stdenv.hostPlatform.isLinux;
+    version = "595.99.02";
+    sha256 = "sha256-6HR3lYv3YwcFSTJL1a1slI66btIQ5EAFs+/4SUD24ew=";
+  };
+
   catppuccin = {
     enable = true;
     autoEnable = true;
